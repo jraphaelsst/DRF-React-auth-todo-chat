@@ -11,7 +11,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         
         token['full_name'] = user.profile.full_name
         token['bio'] = user.profile.bio
-        token['image'] = user.profile.image
+        token['image'] = str(user.profile.image)
         token['verified'] = user.profile.verified
         
         return token
