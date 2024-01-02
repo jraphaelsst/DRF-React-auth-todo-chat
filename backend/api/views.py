@@ -20,6 +20,15 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 
+@api_view(['GET'])
+def getRoutes(request):
+    routes = [
+        '/api/token/',
+        '/api/token/refresh/',
+        '/api/register'
+    ]
+
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def dashboard(request):

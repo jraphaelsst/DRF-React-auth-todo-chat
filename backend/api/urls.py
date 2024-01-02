@@ -5,6 +5,7 @@ from api import views
 
 
 urlpatterns = [
+    path('', views.getRoutes),
     path('token/', views.MyTokenObtainPairView.as_view()),
     path('token/refresh', TokenRefreshView.as_view()),
     path('register/', views.RegisterView.as_view()),
