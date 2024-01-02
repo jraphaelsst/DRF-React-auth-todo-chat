@@ -27,6 +27,7 @@ def getRoutes(request):
         '/api/token/refresh/',
         '/api/register'
     ]
+    return Response(routes)
 
 
 @api_view(['GET', 'POST'])
