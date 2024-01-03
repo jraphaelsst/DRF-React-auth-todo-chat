@@ -1,8 +1,12 @@
 import { createContext, useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-
-import jwt_decode from 'jwt-decode'
-
+import { useNavigate } from 'react-router-dom'
+//ts-ignore
+import { jwtDecode } from "jwt-decode"
+/**
+ *  This import method solved the problem I was  
+ *  having while importing the traditional way
+ */
+// const { default: jwt_decode } = require('jwt-decode')
 
 const AuthContext = createContext()
 
@@ -11,32 +15,31 @@ export default AuthContext
 export const AuthProvider = ({ children }) => {
 
     // Instancialize state management for AuthTokens 
-    const [authTokens, setAuthTokens] = useState(() => {
-        // eslint-disable-next-line no-unused-expressions
+    const [authTokens, setAuthTokens] = useState(() =>
         localStorage.getItem('authTokens')
             ? JSON.parse(localStorage.getItem('authTokens'))
             : null
-    })
+    )
 
     // Instancialize state management for User
-    const [user, setUser] = useState(() => {
-        // eslint-disable-next-line no-unused-expressions
+    const [user, setUser] = useState(() =>
         localStorage.getItem('authTokens')
-            ? jwt_decode(localStorage.getItem('authTokens'))
+            ? jwtDecode(localStorage.getItem('authTokens'))
             : null
-    })
+    )
 
-    /*
+
+    /**
      *  Instancialize state management for Loading
      *  when users are not yet loaded from LocalStorage
      */
     const [loading, setLoading] = useState(true)
 
-    /*
+    /**
      *  Instancialize useHistory hook to forward users
      *  through pages when some action is completed
      */
-    const history = useHistory()
+    const navigate = useNavigate()
 
     // Function to perform user's Login
     const loginUser = async (email, password) => {
@@ -57,9 +60,9 @@ export const AuthProvider = ({ children }) => {
         if (response.status === 200) {
             console.log('Logged in.');
             setAuthTokens(data)
-            setUser(jwt_decode(data.access))
+            setUser(jwtDecode(data.access))
             localStorage.setItem('authTokens', JSON.stringify(data))
-            history.push('/')
+            navigate("/home")
         } else {
             console.log(response.status);
             console.log('There was a server issue.')
@@ -81,7 +84,7 @@ export const AuthProvider = ({ children }) => {
         })
 
         if (response.status === 201) {
-            history.push('/login')
+            navigate('/login')
         } else {
             console.log(response.status);
             console.log('There was a server issue.')
@@ -94,10 +97,10 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(null)
         setUser(null)
         localStorage.removeItem('authTokens')
-        history.push('/login')
+        navigate('/login')
     }
 
-    /*
+    /**
      *  Object containing all other functions
      *  declared in this context
      */
@@ -111,19 +114,19 @@ export const AuthProvider = ({ children }) => {
         logoutUser
     }
 
-    /*
+    /**
      *  Verify is authTokens already exists. If so
      *  setUser is called to bring up the respective
      *  User to that specific Access Token
      */
     useEffect(() => {
         if (authTokens) {
-            setUser(jwt_decode(authTokens.access))
+            setUser(jwtDecode(authTokens.access))
         }
         setLoading(false)
     }, [authTokens, loading])
 
-    /*
+    /**
      *  Return AuthContext Provider containing contextData
      *  declared above with this Context's functionalities
      */
