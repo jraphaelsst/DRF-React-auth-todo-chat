@@ -2,6 +2,9 @@ import { createContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 //ts-ignore
 import { jwtDecode } from "jwt-decode"
+
+const swal = require('sweetalert2')
+
 /**
  *  This import method solved the problem I was  
  *  having while importing the traditional way
@@ -62,11 +65,28 @@ export const AuthProvider = ({ children }) => {
             setAuthTokens(data)
             setUser(jwtDecode(data.access))
             localStorage.setItem('authTokens', JSON.stringify(data))
-            navigate("/home")
+            navigate('/home')
+            swal.fire({
+                title: 'Login Successful',
+                icon: 'success',
+                toast: true,
+                timer: 6000,
+                position: 'bottom-right',
+                timerProgressBar: true,
+                showConfirmButtom: false,
+            })
         } else {
             console.log(response.status);
             console.log('There was a server issue.')
-            alert('Something went wrong' + response.status)
+            swal.fire({
+                title: 'Username or password does not exist.',
+                icon: 'error',
+                toast: true,
+                timer: 6000,
+                position: 'top-right',
+                timerProgressBar: true,
+                showConfirmButtom: false,
+            })
         }
     }
 
@@ -88,7 +108,15 @@ export const AuthProvider = ({ children }) => {
         } else {
             console.log(response.status);
             console.log('There was a server issue.')
-            alert('Something went wrong' + response.status)
+            swal.fire({
+                title: 'An error occurred.',
+                icon: 'error',
+                toast: true,
+                timer: 6000,
+                position: 'top-right',
+                timerProgressBar: true,
+                showConfirmButtom: false,
+            })
         }
     }
 
