@@ -5,10 +5,16 @@ from api import views
 
 
 urlpatterns = [
+    # Authentication URL's
     path('test/', views.testEndPoint, name='test'),
     path('', views.getRoutes, name='get_routes'),
     path('token/', views.MyTokenObtainPairView.as_view(), name='obtain_token_pair'),
     path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterView.as_view(), name='auth_register'),
-    path('dashboard/', views.dashboard, name='dashboard')
+    
+    # Dashborad URL
+    path('dashboard/', views.dashboard, name='dashboard'),
+    
+    # Todo URLs
+    path('todo/<user_id>', views.TodoListView.as_view(), name='todo_listing')
 ]

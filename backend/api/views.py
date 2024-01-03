@@ -6,8 +6,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from api.models import Profile, User
-from api.serializers import MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer
+from api.models import Profile, User, Todo
+from api.serializers import MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer, TodoSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -58,3 +58,16 @@ def dashboard(request):
         return Response({'response': response}, status=status.HTTP_200_OK)
         
     return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TodoListView(generics.ListCreateAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+    
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(id=user_id)
+        
+        todo = Todo.objects.filter(user=user)
+        return todo
+    
