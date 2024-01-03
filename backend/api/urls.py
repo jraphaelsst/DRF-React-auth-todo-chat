@@ -5,9 +5,10 @@ from api import views
 
 
 urlpatterns = [
-    path('', views.getRoutes),
-    path('token/', views.MyTokenObtainPairView.as_view()),
-    path('token/refresh', TokenRefreshView.as_view()),
-    path('register/', views.RegisterView.as_view()),
-    path('dashboard/', views.dashboard)
+    path('test/', views.testEndPoint, name='test'),
+    path('', views.getRoutes, name='get_routes'),
+    path('token/', views.MyTokenObtainPairView.as_view(), name='obtain_token_pair'),
+    path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('register/', views.RegisterView.as_view(), name='auth_register'),
+    path('dashboard/', views.dashboard, name='dashboard')
 ]
