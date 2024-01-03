@@ -17,5 +17,6 @@ urlpatterns = [
     
     # Todo URLs
     path('todo/<user_id>', views.TodoListView.as_view(), name='todo_listing'),
-    path('todo-detail/<user_id>/<todo_id>', views.TodoDetailView.as_view(), name='todo_detail')
+    path('todo-detail/<user_id>/<todo_id>', views.TodoDetailView.as_view(), name='todo_detail'),
+    path('todo-mark/<user_id>/<todo_id>', views.TodoMarkAsCompleted.as_view(), name='todo_detail')
 ]
