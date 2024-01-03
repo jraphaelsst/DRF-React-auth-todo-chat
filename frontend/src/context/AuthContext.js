@@ -10,6 +10,7 @@ export default AuthContext
 
 export const AuthProvider = ({ children }) => {
 
+    // Instancialize state management for AuthTokens 
     const [authTokens, setAuthTokens] = useState(() => {
         // eslint-disable-next-line no-unused-expressions
         localStorage.getItem('authTokens')
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }) => {
             : null
     })
 
+    // Instancialize state management for User
     const [user, setUser] = useState(() => {
         // eslint-disable-next-line no-unused-expressions
         localStorage.getItem('authTokens')
@@ -24,10 +26,19 @@ export const AuthProvider = ({ children }) => {
             : null
     })
 
+    /*
+     *  Instancialize state management for Loading
+     *  when users are not yet loaded from LocalStorage
+     */
     const [loading, setLoading] = useState(true)
 
+    /*
+     *  Instancialize useHistory hook to forward users
+     *  through pages when some action is completed
+     */
     const history = useHistory()
 
+    // Function to perform user's Login
     const loginUser = async (email, password) => {
 
         const response = await fetch('http://localhost:8000/api/token/', {
@@ -56,6 +67,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    // Function to Register new users to database
     const registerUser = async (email, username, password, password2) => {
 
         const response = await fetch('http://localhost:8000/api/register/', {
@@ -77,6 +89,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    // Function to perform user's Logout
     const logoutUser = () => {
         setAuthTokens(null)
         setUser(null)
@@ -84,6 +97,10 @@ export const AuthProvider = ({ children }) => {
         history.push('/login')
     }
 
+    /*
+     *  Object containing all other functions
+     *  declared in this context
+     */
     const contextData = {
         user,
         setUser,
@@ -94,6 +111,11 @@ export const AuthProvider = ({ children }) => {
         logoutUser
     }
 
+    /*
+     *  Verify is authTokens already exists. If so
+     *  setUser is called to bring up the respective
+     *  User to that specific Access Token
+     */
     useEffect(() => {
         if (authTokens) {
             setUser(jwt_decode(authTokens.access))
@@ -101,6 +123,10 @@ export const AuthProvider = ({ children }) => {
         setLoading(false)
     }, [authTokens, loading])
 
+    /*
+     *  Return AuthContext Provider containing contextData
+     *  declared above with this Context's functionalities
+     */
     return (
         <AuthContext.Provider value={contextData}>
             {loading ? null : children}
