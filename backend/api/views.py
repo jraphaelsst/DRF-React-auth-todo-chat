@@ -1,3 +1,4 @@
+from django.db.models import Subquery, OuterRef, Q
 from django.shortcuts import render
 
 from rest_framework import generics, status
@@ -6,8 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from api.models import Profile, User, Todo
-from api.serializers import MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer, TodoSerializer
+from api.models import ChatMessage, Profile, User, Todo
+from api.serializers import ChatMessageSerializer, MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer, TodoSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -99,3 +100,28 @@ class TodoMarkAsCompleted(generics.RetrieveUpdateDestroyAPIView):
         todo.save()
         
         return todo
+
+
+class MyInbox(generics.ListAPIView):
+    serializer_class = ChatMessageSerializer
+    
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        
+        messages = ChatMessage.objects.filter(
+            id__in=Subquery(
+                User.objects.filter(
+                    Q(sender__receiver=user_id)|
+                    Q(receiver__sender=user_id)
+                ).distinct().annotate(
+                    last_msg=Subquery(
+                        ChatMessages.objects.filter(
+                            Q(sender=OuterRef('id'), receive=user_id)|
+                            Q(receiver=OuterRef('id'), sender=user_id)
+                        ).order_by('-id')[:1].values_list('id', flat=True)
+                    )
+                ).values_list('last_msg', flat=True).order_by('-id')
+            )
+        ).order_by('-id')
+        
+        return messages

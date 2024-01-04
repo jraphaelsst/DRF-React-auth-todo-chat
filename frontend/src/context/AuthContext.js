@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
                 icon: 'success',
                 toast: true,
                 timer: 6000,
-                position: 'bottom-right',
+                position: 'top-right',
                 timerProgressBar: true,
                 showConfirmButtom: false,
             })
