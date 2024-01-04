@@ -1,3 +1,5 @@
+from .profile_serializer import ProfileSerializer
+from .chat_message_serializer import ChatMessageSerializer
 from .register_serializer import RegisterSerializer
 from .todo_serializer import TodoSerializer
 from .token_serializer import MyTokenObtainPairSerializer
