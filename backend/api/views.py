@@ -13,14 +13,12 @@ from api.serializers import ChatMessageSerializer, MyTokenObtainPairSerializer, 
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-    permission_classes = [IsAuthenticated]
 
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = ([AllowAny])
     serializer_class = RegisterSerializer
-    permission_classes = [IsAuthenticated]
 
 
 @api_view(['GET', 'POST'])
@@ -121,8 +119,8 @@ class MyInbox(generics.ListAPIView):
                     Q(receiver__sender=user_id)
                 ).distinct().annotate(
                     last_msg=Subquery(
-                        ChatMessages.objects.filter(
-                            Q(sender=OuterRef('id'), receive=user_id)|
+                        ChatMessage.objects.filter(
+                            Q(sender=OuterRef('id'), receiver=user_id)|
                             Q(receiver=OuterRef('id'), sender=user_id)
                         ).order_by('-id')[:1].values_list('id', flat=True)
                     )
@@ -151,10 +149,36 @@ class GetMessages(generics.ListAPIView):
 
 class SendMessage(generics.CreateAPIView):
     serializer_class = ChatMessageSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
 
 class ProfileDetail(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     permission_classes = [IsAuthenticated]
+
+
+class SearchUser(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    permission_class = [IsAuthenticated]
+    
+    def list(self, request, **kwargs):
+        username = self.kwargs['username']
+        logged_in_user = self.request.user
+        users = Profile.objects.filter(
+            Q(user__username__icontains=username) |
+            Q(full_name__icontains=username) |
+            Q(user__email__icontains=username) &
+            ~Q(user=logged_in_user.id)
+        )
+        
+        if not users.exists():
+            return Response(
+                {'detail': 'No users found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        serializer = self.get_serializer(users, many=True)
+        
+        return Response(serializer.data)

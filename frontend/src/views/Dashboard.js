@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 import useAxios from "../utils/useAxios"
 
-const { jwtDecode } = require('jwt-decode')
+import { jwtDecode } from 'jwt-decode'
 
 function Dashboard() {
 

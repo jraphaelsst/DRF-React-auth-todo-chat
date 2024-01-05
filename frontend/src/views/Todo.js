@@ -16,9 +16,9 @@ const Todo = () => {
 
     const [todo, setTodo] = useState([])
     const [createTodo, setCreateTodo] = useState({'title': '', 'completed': false})
-    
-    const handleNewTodoTitle = (event) => {
 
+
+    const handleNewTodoTitle = (event) => {
         setCreateTodo({
             ...createTodo,
             [event.target.name]: event.target.value
@@ -27,7 +27,11 @@ const Todo = () => {
 
 
     useEffect(() => {
-        fetchTodos()
+        try {
+            fetchTodos()
+        } catch(error) {
+            console.log(error)
+        }
     }, [])
 
 
@@ -36,7 +40,7 @@ const Todo = () => {
             setTodo(res.data)
         })
     }
-    
+
 
     const formSubmit = () => {
 
@@ -58,7 +62,7 @@ const Todo = () => {
                     timerProgressBar: true,
                     showConfirmButton: true
                 })
-                fetchTodos();
+                fetchTodos()
                 createTodo.title = ''
             })
         } catch(error) {
@@ -82,6 +86,7 @@ const Todo = () => {
             showConfirmButton: true
         })
     }
+
 
     const markTodoAsComplete = async (todo_id) => {
         await api.patch(baseUrl + '/todo-mark/' + user_id + '/' + todo_id + '/')

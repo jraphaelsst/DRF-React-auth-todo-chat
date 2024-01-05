@@ -27,4 +27,5 @@ urlpatterns = [
     
     # Get / Filter Data
     path('profile/<int:pk>/', views.ProfileDetail.as_view()),
+    path('search/<username>/', views.SearchUser.as_view()),
 ]

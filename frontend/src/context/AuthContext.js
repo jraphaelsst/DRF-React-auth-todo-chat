@@ -5,11 +5,6 @@ import { jwtDecode } from "jwt-decode"
 
 const swal = require('sweetalert2')
 
-/**
- *  This import method solved the problem I was  
- *  having while importing the traditional way
- */
-// const { default: jwt_decode } = require('jwt-decode')
 
 const AuthContext = createContext()
 

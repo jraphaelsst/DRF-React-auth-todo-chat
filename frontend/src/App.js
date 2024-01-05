@@ -7,6 +7,7 @@ import PrivateRoute from './utils/PrivateRoute'
 import Dashboard from './views/Dashboard'
 import Homepage from './views/Homepage'
 import Loginpage from './views/Loginpage'
+import Message from './views/Message'
 import Navbar from './views/Navbar'
 import Registerpage from './views/Registerpage'
 import Todo from './views/Todo'
@@ -19,11 +20,12 @@ function App() {
         <Fragment>
           <Navbar/>
           <Routes>
-            <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path='/register' element={<Registerpage />}/>
             <Route path='/login' element={<Loginpage />}/>
             <Route path='/home' element={<PrivateRoute><Homepage /></PrivateRoute>} />
+            <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path='/todo' element={<PrivateRoute><Todo /></PrivateRoute>} />
+            <Route path='/inbox' element={<PrivateRoute><Message /></PrivateRoute>} />
           </Routes>
         </Fragment>
       </AuthProvider>
