@@ -8,17 +8,19 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.models import ChatMessage, Profile, User, Todo
-from api.serializers import ChatMessageSerializer, MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer, TodoSerializer
+from api.serializers import ChatMessageSerializer, MyTokenObtainPairSerializer, ProfileSerializer, RegisterSerializer, UserSerializer, TodoSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = ([AllowAny])
     serializer_class = RegisterSerializer
+    permission_classes = [IsAuthenticated]
 
 
 @api_view(['GET', 'POST'])
@@ -64,6 +66,7 @@ def dashboard(request):
 class TodoListView(generics.ListCreateAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -75,6 +78,7 @@ class TodoListView(generics.ListCreateAPIView):
 
 class TodoDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TodoSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_object(self):
         user_id = self.kwargs['user_id']
@@ -88,6 +92,7 @@ class TodoDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class TodoMarkAsCompleted(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TodoSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_object(self):
         user_id = self.kwargs['user_id']
@@ -104,6 +109,7 @@ class TodoMarkAsCompleted(generics.RetrieveUpdateDestroyAPIView):
 
 class MyInbox(generics.ListAPIView):
     serializer_class = ChatMessageSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -129,6 +135,7 @@ class MyInbox(generics.ListAPIView):
 
 class GetMessages(generics.ListAPIView):
     serializer_class = ChatMessageSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         sender_id = self.kwargs['sender_id']
@@ -144,3 +151,10 @@ class GetMessages(generics.ListAPIView):
 
 class SendMessage(generics.CreateAPIView):
     serializer_class = ChatMessageSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class ProfileDetail(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    permission_classes = [IsAuthenticated]
