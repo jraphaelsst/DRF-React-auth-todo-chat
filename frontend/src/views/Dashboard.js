@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react'
 
 import useAxios from "../utils/useAxios"
 
-const { jwtDecode } = require('jwt-decode')
+import { jwtDecode } from 'jwt-decode'
 
 function Dashboard() {
+    const baseUrl = "http://localhost:8000/api"
 
     const [res, setRes] = useState("")
+
     const api = useAxios();
     const token = localStorage.getItem("authTokens")
 
@@ -22,8 +24,8 @@ function Dashboard() {
 
     useEffect(() => {
       const fetchData = async () => {
-        try{
-          const response = await api.get("/test/")
+        try {
+          const response = await api.get(baseUrl + "/test/")
           setRes(response.data.response)
         } catch (error) {
           console.log(error);

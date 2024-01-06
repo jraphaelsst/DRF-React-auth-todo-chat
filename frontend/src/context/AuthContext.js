@@ -5,11 +5,6 @@ import { jwtDecode } from "jwt-decode"
 
 const swal = require('sweetalert2')
 
-/**
- *  This import method solved the problem I was  
- *  having while importing the traditional way
- */
-// const { default: jwt_decode } = require('jwt-decode')
 
 const AuthContext = createContext()
 
@@ -46,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
     // Function to perform user's Login
     const loginUser = async (email, password) => {
-
+        
         const response = await fetch('http://localhost:8000/api/token/', {
             method: 'POST',
             headers: {

@@ -1,6 +1,8 @@
 from datetime import timedelta
 from pathlib import Path
 
+import os
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,6 +11,7 @@ SECRET_KEY = "django-insecure-x%$)4oltw2@a%%&v=&h_d6v(ndbd8uzsuz5$weeyy3)ie@komq
 
 
 DEBUG = True
+
 
 ALLOWED_HOSTS = []
 
@@ -28,6 +31,7 @@ INSTALLED_APPS = [
     'api',
 ]
 
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -39,7 +43,9 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+
 ROOT_URLCONF = "pwt_auth.urls"
+
 
 TEMPLATES = [
     {
@@ -56,6 +62,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = "pwt_auth.wsgi.application"
 
@@ -80,14 +87,22 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
+
 TIME_ZONE = "UTC"
 
+
 USE_I18N = True
+
 
 USE_TZ = True
 
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

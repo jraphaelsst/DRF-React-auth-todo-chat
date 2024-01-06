@@ -21,19 +21,16 @@ const useAxios = () => {
     })
 
     // Initialize a request for a new Token using Axios Instance
-    axiosInstance.interceptors.request.use(async req => {
+    axiosInstance.interceptors.request.use(async (req) => {
         // Decode Access Token
         const user = jwtDecode(authTokens.access)
         // Check if Token is expired
         const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1
 
-        console.log(user)
-        console.log(isExpired)
+        // If Token is not expired, return the Request itself
+        if (!isExpired) return req
 
         // If Token is expired, request a new one
-        if (isExpired) return req
-
-        // If not expired, return the Token itself
         const response = await axios.post(`${baseUrl}/token/refresh/`, {
             refresh: authTokens.refresh
         })
