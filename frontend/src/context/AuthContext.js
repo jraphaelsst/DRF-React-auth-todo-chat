@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
     // Function to perform user's Login
     const loginUser = async (email, password) => {
-
+        
         const response = await fetch('http://localhost:8000/api/token/', {
             method: 'POST',
             headers: {

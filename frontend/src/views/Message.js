@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 import './style/Message.css'
 
@@ -27,7 +28,6 @@ function Message() {
             console.log(error);
         }
     }, [])
-    console.log(messages)
 
   return (
     <div>
@@ -49,16 +49,16 @@ function Message() {
                     </div>
                 </div>
                 {messages.map((message) =>
-                    <a
-                        key={message.sender_profile.full_name}
-                        href="/"
+                    <Link
+                        key={message.receiver_profile.full_name}
+                        to={ '/inbox/' + (message.sender === user_id ? message.receiver : message.sender) }
                         className="list-group-item list-group-item-action border-0"
                     >
                         <div className="badge bg-success float-right text-white">
                             {moment.utc(message.date).local().startOf('seconds').fromNow()}
                         </div>
                         <div className="d-flex align-items-start">
-                            {message.sender.id !== user_id &&
+                            {message.sender === user_id &&
                                 <img
                                     src={message.receiver_profile.image}
                                     className="rounded-circle mr-1"
@@ -67,7 +67,7 @@ function Message() {
                                     height={40}
                                 />
                             }
-                            {message.sender.id === user_id &&
+                            {message.sender !== user_id &&
                                 <img
                                     src={message.sender_profile.image}
                                     className="rounded-circle mr-1"
@@ -77,10 +77,10 @@ function Message() {
                                 />
                             }
                         <div className="flex-grow-1 ml-3">
-                            {message.sender.id !== user_id &&
+                            {message.sender === user_id &&
                                 message.receiver_profile.full_name
                             }
-                            {message.sender.id === user_id &&
+                            {message.sender !== user_id &&
                                 message.sender_profile.full_name
                             }
                             <div className="small">
@@ -88,7 +88,7 @@ function Message() {
                             </div>
                         </div>
                         </div>
-                    </a>
+                    </Link>
                 )}
 
                 <hr className="d-block d-lg-none mt-1 mb-0" />

@@ -8,8 +8,10 @@ import Dashboard from './views/Dashboard'
 import Homepage from './views/Homepage'
 import Loginpage from './views/Loginpage'
 import Message from './views/Message'
+import MessageDetail from './views/MessageDetail'
 import Navbar from './views/Navbar'
 import Registerpage from './views/Registerpage'
+import SearchUserpage from './views/SearchUserpage'
 import Todo from './views/Todo'
 
 
@@ -26,6 +28,8 @@ function App() {
             <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path='/todo' element={<PrivateRoute><Todo /></PrivateRoute>} />
             <Route path='/inbox' element={<PrivateRoute><Message /></PrivateRoute>} />
+            <Route path='/inbox/:id' element={<PrivateRoute><MessageDetail /></PrivateRoute>} />
+            <Route path='/search/:username' element={<PrivateRoute><SearchUserpage /></PrivateRoute>} />
           </Routes>
         </Fragment>
       </AuthProvider>

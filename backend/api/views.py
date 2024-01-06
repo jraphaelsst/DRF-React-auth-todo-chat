@@ -11,6 +11,7 @@ from api.models import ChatMessage, Profile, User, Todo
 from api.serializers import ChatMessageSerializer, MyTokenObtainPairSerializer, ProfileSerializer, RegisterSerializer, UserSerializer, TodoSerializer
 
 
+# Auth App
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -44,6 +45,7 @@ def getRoutes(request):
     return Response(routes)
 
 
+# Dashboard
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def dashboard(request):
@@ -61,6 +63,7 @@ def dashboard(request):
     return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Todo List
 class TodoListView(generics.ListCreateAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
@@ -105,9 +108,10 @@ class TodoMarkAsCompleted(generics.RetrieveUpdateDestroyAPIView):
         return todo
 
 
+# Chat App
 class MyInbox(generics.ListAPIView):
     serializer_class = ChatMessageSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -133,7 +137,7 @@ class MyInbox(generics.ListAPIView):
 
 class GetMessages(generics.ListAPIView):
     serializer_class = ChatMessageSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         sender_id = self.kwargs['sender_id']
@@ -141,7 +145,7 @@ class GetMessages(generics.ListAPIView):
         
         messages = ChatMessage.objects.filter(
             sender__in=[sender_id, receiver_id],
-            receiver_id=[sender_id, receiver_id]
+            receiver__in=[sender_id, receiver_id]
         )
         
         return messages
@@ -155,13 +159,13 @@ class SendMessage(generics.CreateAPIView):
 class ProfileDetail(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
 
 class SearchUser(generics.ListAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
-    permission_class = [IsAuthenticated]
+    # permission_class = [IsAuthenticated]
     
     def list(self, request, **kwargs):
         username = self.kwargs['username']
